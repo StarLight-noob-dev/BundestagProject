@@ -16,7 +16,7 @@ public class Generator {
     public static String generateID() {
 
         String uuid;
-        int len = 10;
+        int len = 15;
         boolean nonUnique;
 
         do {
