@@ -20,6 +20,19 @@ import java.util.Set;
 
 public class Main {
 
+    //TODO
+    /*
+    1. Abgeordneter MongoDB                 |   Done
+    2. Partys MongoDB                       |   working on.
+    3. Plenary seesions MongoDB             |
+    4. Speeches MongoDB                     |
+    5. Check all info works both ways       |
+    6. Write the freacking test             |
+    7. Some some menu and finish up docu    |
+        - Write the readme                  |
+    8. Upload
+     */
+
     private static final String RELATIV_PATH_PC = "D:\\Programmier-Praktikum23\\";
     private static final String REDE_FILE_PATH = "Bundestagsreden20";
     private static final String MASTER_DATA_FILE_PATH = "MdB-Stammdaten/MDB_STAMMDATEN.xml";
