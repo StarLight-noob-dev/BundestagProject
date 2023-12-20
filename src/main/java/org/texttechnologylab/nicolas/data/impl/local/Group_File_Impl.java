@@ -6,6 +6,7 @@ import org.texttechnologylab.nicolas.data.models.Group;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Group_File_Impl extends ClassObject_Impl implements Group {
 
@@ -44,13 +45,18 @@ public class Group_File_Impl extends ClassObject_Impl implements Group {
 
     @Override
     public Abgeordneter getMember(String vorname, String nachname) {
-        //TODO
-        return null;
+        String n = vorname + " " + nachname;
+        return this.Members.stream()
+                .filter(m -> m.fullNameWithoutTitle().equals(n))
+                .findFirst()
+                .orElse(null);
     }
 
     @Override
     public Abgeordneter getMember(String id) {
-        return null;
-        //TODO
+        return this.Members.stream()
+                .filter(m -> m.getID().equals(id))
+                .findFirst()
+                .orElse(null);
     }
 }
