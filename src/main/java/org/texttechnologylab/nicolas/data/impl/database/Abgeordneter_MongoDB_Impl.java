@@ -2,15 +2,20 @@ package org.texttechnologylab.nicolas.data.impl.database;
 
 import org.bson.Document;
 import org.texttechnologylab.nicolas.data.Types;
-import org.texttechnologylab.nicolas.data.impl.local.Abgeordneter_File_Impl;
 import org.texttechnologylab.nicolas.data.models.*;
 import org.texttechnologylab.nicolas.database.MongoDBConnectionHandler;
 
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation for MongoDB
+ * @author Nicolas Calderon
+ */
 public class Abgeordneter_MongoDB_Impl extends MongoDBConnectionHandler implements Abgeordneter {
 
     // Name of the collection
@@ -55,7 +60,10 @@ public class Abgeordneter_MongoDB_Impl extends MongoDBConnectionHandler implemen
 
 
     public Abgeordneter_MongoDB_Impl(Document ab){
-        this.bankID = (String) ab.get("_id");
+
+        SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
+
+        this.bankID = ab.get("_id").toString();
         this.ID = (String) ab.get("id");
 
         this.FirstName = (String) ab.get("name");
@@ -64,9 +72,19 @@ public class Abgeordneter_MongoDB_Impl extends MongoDBConnectionHandler implemen
         this.AdelSuffix = (String) ab.get("adelsuffix");
         this.Anrede = (String) ab.get("anrede");
         this.AcademicTitle = (String) ab.get("title");
-        this.BornOnDate = (Date) ab.get("born");
+        try {
+            this.BornOnDate = new Date(sdfDate.parse((String) ab.get("born")).getTime());
+        } catch (ParseException e) {
+            System.out.printf("There has been a mistake while parsing %s date it will be set to null", fullNameWithoutTitle());
+            this.BornOnDate = null;
+        }
+        try {
+            this.DeathOnDate = new Date(sdfDate.parse((String) ab.get("death")).getTime());
+        } catch (ParseException e) {
+            System.out.printf("There has been a mistake while parsing %s date it will be set to null", fullNameWithoutTitle());
+            this.DeathOnDate = null;
+        }
         this.BornInCity = (String) ab.get("bornplace");
-        this.DeathOnDate = (Date) ab.get("death");
         this.Sex = SexHelper((String) ab.get("sex"));
         this.Religion = (String) ab.get("religion");
         this.partyID = (String) ab.get("party");
@@ -363,9 +381,9 @@ public class Abgeordneter_MongoDB_Impl extends MongoDBConnectionHandler implemen
         doc.put("adelsuffix", abgeordneter.getAdelssuffix());
         doc.put("anrede", abgeordneter.getAnrede());
         doc.put("academictitle", abgeordneter.getTitle());
-        doc.put("born", abgeordneter.getGeburtsDatum());
+        doc.put("born", String.valueOf(abgeordneter.getGeburtsDatum()));
         doc.put("bornplace", abgeordneter.getGeburtsOrt());
-        doc.put("death", abgeordneter.getSterbeDatum());
+        doc.put("death", String.valueOf(abgeordneter.getSterbeDatum()));
         doc.put("sex", String.valueOf(abgeordneter.getGeschlecht()));
         doc.put("religion", abgeordneter.getReligion());
         doc.put("work", abgeordneter.getBeruf());

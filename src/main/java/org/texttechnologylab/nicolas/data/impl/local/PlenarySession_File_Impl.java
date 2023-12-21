@@ -1,5 +1,6 @@
 package org.texttechnologylab.nicolas.data.impl.local;
 
+import org.texttechnologylab.nicolas.data.helper.Generator;
 import org.texttechnologylab.nicolas.data.models.Abgeordneter;
 import org.texttechnologylab.nicolas.data.models.AgendaItem;
 import org.texttechnologylab.nicolas.data.models.PlenarySession;
@@ -32,6 +33,7 @@ public class PlenarySession_File_Impl extends ClassObject_Impl implements Plenar
      */
     public PlenarySession_File_Impl(BundestagFactory pFactory) {
         super(pFactory);
+        setID(Generator.generateID());
         this.excusedDeputies = new ArrayList<>(0);
         this.agendaItems = new ArrayList<>(0);
         this.sessionChairs = new ArrayList<>(0);

@@ -4,6 +4,10 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
+/**
+ * Class that helps to generate defferent things as needed
+ * @author Nicolas Calderon
+ */
 public class Generator {
 
     private static final Random random = new Random();

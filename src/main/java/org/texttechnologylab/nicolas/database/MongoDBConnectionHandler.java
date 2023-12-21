@@ -9,7 +9,11 @@ import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.UpdateResult;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 import org.texttechnologylab.nicolas.data.exceptions.DBException;
+import org.texttechnologylab.nicolas.data.impl.database.*;
+import org.texttechnologylab.nicolas.data.impl.local.BundestagFactory;
+import org.texttechnologylab.nicolas.data.models.*;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -25,15 +29,6 @@ public class MongoDBConnectionHandler {
     private static MongoClient connection = null;
     private static MongoDatabase db = null;
     private static boolean connected = false;
-
-    private static final Random random = new Random();
-
-    private static List<String> dateFilterSIDs = null; // speech ids
-    private static List<String> dateFilterPIDs = null; // plenary session ids
-    private static LocalDateTime dFrom = null;
-    private static LocalDateTime dTo = null;
-
-    private static DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy");
 
     /**
      * Connect to the database with properties from the resources
@@ -150,9 +145,11 @@ public class MongoDBConnectionHandler {
      * @return the resolved document
      * @throws DBException if the document does not exist
      */
-    protected static Document findDocumentById(String collectionName, String id) throws DBException {
+    public static Document findDocumentById(String collectionName, String id) throws DBException {
+        ObjectId objectId;
+        objectId = new ObjectId(id);
         MongoCollection<Document> collection = db.getCollection(collectionName);
-        FindIterable<Document> iter = collection.find(Filters.eq("_id", id));
+        FindIterable<Document> iter = collection.find(Filters.eq("_id", objectId));
         try (MongoCursor<Document> cursor = iter.cursor()) {
             if (!cursor.hasNext()) throw new DBException(String.format("Collection %s has multiple objects related to %s", collectionName, id));
             return cursor.next();
@@ -166,7 +163,7 @@ public class MongoDBConnectionHandler {
      * @return the documents
      * @throws DBException if one or multiple of the documents do not exist
      */
-    protected static List<Document> findMultipleDocumentById(String collectionName, List<String> ids) throws DBException {
+    public static List<Document> findMultipleDocumentById(String collectionName, List<String> ids) throws DBException {
         MongoCollection<Document> collection = db.getCollection(collectionName);
         FindIterable<Document> iter = collection.find(Filters.in("_id", ids));
         List<Document> result = new ArrayList<>();
@@ -177,4 +174,64 @@ public class MongoDBConnectionHandler {
         return result;
     }
 
+    /**
+     * Manages the upload of all data
+     * @param factory to get data from local
+     */
+    public static void UploadData(BundestagFactory factory){
+
+        if (!connected){
+            System.out.println("Looks like you are not connected to the database, starting connection...");
+            connect();
+        }
+
+        System.out.println("Starting the upload of Abgeordneter");
+        for (Abgeordneter a : factory.listAbgeordneter()) {
+            Document doc = Abgeordneter_MongoDB_Impl.toDocument(a);
+            insert("Abgeordneter", doc);
+        }
+        System.out.println("Upload of Abgeordneter has finish");
+        System.out.println("====================================\n");
+
+        System.out.println("Starting the upload of Parties");
+        for (Party p : factory.listParties()) {
+            Document doc = Party_MongoDB_Impl.toDocument(p);
+            insert("Party", doc);
+        }
+        System.out.println("Upload of Parties has finish");
+        System.out.println("====================================\n");
+
+        System.out.println("Starting the upload of Factions");
+        for (Faction f : factory.listFactions()) {
+            Document doc = Faction_MongoDB_Impl.toDocument(f);
+            insert("Faction", doc);
+        }
+        System.out.println("Upload of Factions has finish");
+        System.out.println("====================================\n");
+
+        System.out.println("Starting the upload of Plenary Sessions");
+        for (PlenarySession ps : factory.listSessions()) {
+            Document doc = PlenarySession_MongoDB_Impl.toDocument(ps);
+            insert("PlenarySession", doc);
+        }
+        System.out.println("Upload of Plenary Sessions has finish");
+        System.out.println("====================================\n");
+
+        System.out.println("Starting the upload of Agenda Items");
+        for (AgendaItem ag : factory.listItems()) {
+            Document doc = AgendaItem_MongoDB_Impl.toDocument(ag);
+            insert("AgendaItems", doc);
+        }
+        System.out.println("Upload of Agenda Items has finish");
+        System.out.println("====================================\n");
+
+        System.out.println("Starting the upload of Speeches");
+        for (Speech s : factory.listSpeeches()) {
+            Document doc = Speech_MongoDB_Impl.toDocument(s);
+            insert("Speech", doc);
+        }
+        System.out.println("Upload of Speeches has finish");
+        System.out.println("====================================\n");
+        System.out.println("[INFO] All data was uploaded correctly");
+    }
 }

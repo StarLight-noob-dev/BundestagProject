@@ -3,7 +3,7 @@ package org.texttechnologylab.nicolas.data.impl.database;
 import org.bson.Document;
 import org.texttechnologylab.nicolas.data.models.Abgeordneter;
 import org.texttechnologylab.nicolas.data.models.ClassObject;
-import org.texttechnologylab.nicolas.data.models.Faction;
+
 import org.texttechnologylab.nicolas.data.models.Party;
 import org.texttechnologylab.nicolas.database.MongoDBConnectionHandler;
 
@@ -12,6 +12,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation for MongoDB
+ * @author Nicolas Calderon
+ */
 public class Party_MongoDB_Impl extends MongoDBConnectionHandler implements Party {
 
     private static final String COLLECTION_NAME = "Party";
@@ -25,7 +29,7 @@ public class Party_MongoDB_Impl extends MongoDBConnectionHandler implements Part
     private List<String> membersID;
 
     public Party_MongoDB_Impl(Document f){
-        this.bankID = (String) f.get("_id");
+        this.bankID = f.get("_id").toString();
         this.id = (String) f.get("id");
         this.name = (String) f.get(name);
         this.membersID = (List<String>) f.get("members");

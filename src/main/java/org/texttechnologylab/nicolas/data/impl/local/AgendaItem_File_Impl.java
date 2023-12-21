@@ -1,5 +1,6 @@
 package org.texttechnologylab.nicolas.data.impl.local;
 
+import org.texttechnologylab.nicolas.data.helper.Generator;
 import org.texttechnologylab.nicolas.data.models.AgendaItem;
 import org.texttechnologylab.nicolas.data.models.Comment;
 import org.texttechnologylab.nicolas.data.models.PlenarySession;
@@ -28,6 +29,7 @@ public class AgendaItem_File_Impl extends ClassObject_Impl implements AgendaItem
         this.speeches = new ArrayList<>();
         this.comments = new ArrayList<>();
         init(node, pDoc);
+        setID(Generator.generateID());
     }
 
     private void init(Node node, Document pDoc){

@@ -7,6 +7,10 @@ import org.texttechnologylab.nicolas.database.MongoDBConnectionHandler;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation for MongoDB
+ * @author Nicolas Calderon
+ */
 public class AgendaItem_MongoDB_Impl extends MongoDBConnectionHandler implements AgendaItem {
 
     private static final String COLLECTION_NAME = "AgendaItems";
@@ -23,7 +27,7 @@ public class AgendaItem_MongoDB_Impl extends MongoDBConnectionHandler implements
     private String plenaryID;
 
     public AgendaItem_MongoDB_Impl(Document ag){
-        this.bankID = (String) ag.get("_id");
+        this.bankID = ag.get("_id").toString();
         this.id = (String) ag.get("id");
         this.title = (String) ag.get("title");
         this.label = (String) ag.get("label");

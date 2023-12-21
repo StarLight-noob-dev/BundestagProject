@@ -8,6 +8,10 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation for MongoDB
+ * @author Nicolas Calderon
+ */
 public class Speech_MongoDB_Impl extends MongoDBConnectionHandler implements Speech {
 
     private static final String COLLECTION_NAME = "Speech";
@@ -26,14 +30,13 @@ public class Speech_MongoDB_Impl extends MongoDBConnectionHandler implements Spe
     private List<String> commentsID;
 
     public Speech_MongoDB_Impl(Document speech){
-        this.bankID = (String) speech.get("_id");
+        this.bankID = speech.get("_id").toString();
         this.id = (String) speech.get("id");
         this.label = (String) speech.get("label");
         this.speakerID = (String) speech.get("speaker");
         this.plenaryID = (String) speech.get("plenarysession");
         this.text = (List<String>) speech.get("content");
         this.agendaID = (String) speech.get("agendaitem");
-        this.commentsID = (List<String>) speech.get("comments");
     }
 
     @Override
@@ -141,7 +144,7 @@ public class Speech_MongoDB_Impl extends MongoDBConnectionHandler implements Spe
         doc.put("plenarysession", speech.getPlenarySession().getID());
         doc.put("agendaitem", speech.getAgendaItem().getID());
         doc.put("content", speech.getText());
-        doc.put("comments", speech.getComments());
+        doc.put("comments", speech.getComments().stream().map(Comment::getContent).collect(Collectors.toList()));
 
         return doc;
     }
