@@ -4,17 +4,17 @@ import org.bson.Document;
 import org.texttechnologylab.nicolas.data.models.Abgeordneter;
 import org.texttechnologylab.nicolas.data.models.ClassObject;
 import org.texttechnologylab.nicolas.data.models.Faction;
+import org.texttechnologylab.nicolas.data.models.Party;
 import org.texttechnologylab.nicolas.database.MongoDBConnectionHandler;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class Faction_MongoDB_Impl extends MongoDBConnectionHandler implements Faction {
+public class Party_MongoDB_Impl extends MongoDBConnectionHandler implements Party {
 
-    private static final String COLLECTION_NAME = "Faction";
+    private static final String COLLECTION_NAME = "Party";
 
     // ID
     private String bankID;
@@ -24,12 +24,13 @@ public class Faction_MongoDB_Impl extends MongoDBConnectionHandler implements Fa
     private Set<Abgeordneter> Members = new HashSet<>(0);
     private List<String> membersID;
 
-    public Faction_MongoDB_Impl(Document f){
+    public Party_MongoDB_Impl(Document f){
         this.bankID = (String) f.get("_id");
         this.id = (String) f.get("id");
         this.name = (String) f.get(name);
         this.membersID = (List<String>) f.get("members");
     }
+
     @Override
     public String getID() {
         return id;
@@ -109,16 +110,16 @@ public class Faction_MongoDB_Impl extends MongoDBConnectionHandler implements Fa
 
     /**
      * Transform a Faction into a Document which can be store in a MongoDB
-     * @param faction to be transformed
-     * @return Document of the faction
+     * @param party to be transformed
+     * @return Document of the party
      */
-    public static Document toDocument(Faction faction){
+    public static Document toDocument(Party party){
         Document doc = new Document();
 
-        doc.put("id", faction.getID());
-        doc.put("type", "faction");
-        doc.put("name", faction.getName());
-        doc.put("members", faction.getMembers().stream()
+        doc.put("id", party.getID());
+        doc.put("type", "party");
+        doc.put("name", party.getName());
+        doc.put("members", party.getMembers().stream()
                 .map(Abgeordneter::getID)
                 .collect(Collectors.toList()));
 

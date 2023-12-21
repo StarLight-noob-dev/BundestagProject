@@ -74,7 +74,7 @@ public class Abgeordneter_File_Impl extends ClassObject_Impl implements Abgeordn
         Node FirstName = XMLParser.getSingleNodeFromNodesXML(pNode, "VORNAME");
         Node LastName = XMLParser.getSingleNodeFromNodesXML(pNode, "NACHNAME");
         Node Sex = XMLParser.getSingleNodeFromNodesXML(pNode, "GESCHLECHT");
-        Node BornOnDate = XMLParser.getSingleNodeFromNodesXML(pNode, "GEBURSTDATUM");
+        Node BornOnDate = XMLParser.getSingleNodeFromNodesXML(pNode, "GEBURTSDATUM");
         Node OrtZusatz = XMLParser.getSingleNodeFromNodesXML(pNode, "ORTZUSATZ");
         Node AdelSuffix = XMLParser.getSingleNodeFromNodesXML(pNode, "ADEL");
         Node Anrede = XMLParser.getSingleNodeFromNodesXML(pNode, "ANREDE_TITEL");

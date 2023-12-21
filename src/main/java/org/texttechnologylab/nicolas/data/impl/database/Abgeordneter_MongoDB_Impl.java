@@ -214,11 +214,6 @@ public class Abgeordneter_MongoDB_Impl extends MongoDBConnectionHandler implemen
 
     @Override
     public Faction getFaction() {
-        if (this.factionID == null) return null;
-        if (this.pFaction == null){
-
-            this.pFaction = new Faction_MongoDB_Impl();
-        }
         return pFaction;
     }
 
