@@ -1,6 +1,11 @@
 package org.texttechnologylab;
 
 
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import org.bson.Document;
 import org.texttechnologylab.nicolas.data.exceptions.DBException;
 import org.texttechnologylab.nicolas.data.exceptions.StammDatenParserException;
 import org.texttechnologylab.nicolas.data.helper.FileReader;
@@ -16,6 +21,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.function.Consumer;
 
 public class Main {
 
@@ -136,5 +142,40 @@ public class Main {
      */
     public static void CloseMessage(){
         System.out.println("The program will end now");
+    }
+
+    public static void CopyData(){
+
+        // MongoDB connection URIs for both databases
+        String sourceUri = "mongodb://PPR_WiSe23_144:GLJc87MY@lehre.texttechnologylab.org:27020";
+        String targetUri = "mongodb://InsightBundestag_ro:bD;QI1>J$kAV8eO?@lehre.texttechnologylab.org:27020";
+
+        // Collection names
+        String sourceCollectionName = "comment";
+        String targetCollectionName = "Muster-comment";
+
+        // Connect to source and target databases
+        try (MongoClient sourceClient = new MongoClient(new MongoClientURI(sourceUri));
+             MongoClient targetClient = new MongoClient(new MongoClientURI(targetUri))) {
+
+            MongoDatabase sourceDatabase = sourceClient.getDatabase("PPR_WiSe23_144");
+            MongoDatabase targetDatabase = targetClient.getDatabase("Musterloesung");
+
+            // Get the source and target collections
+            MongoCollection<Document> sourceCollection = sourceDatabase.getCollection(sourceCollectionName);
+            MongoCollection<Document> targetCollection = targetDatabase.getCollection(targetCollectionName);
+
+            // Drop the target collection if it already exists
+            targetCollection.drop();
+
+            // Copy documents from source to target collection
+            sourceCollection.find().forEach((Consumer<? super Document>) targetCollection::insertOne);
+
+            System.out.println("Collection copied successfully.");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }
